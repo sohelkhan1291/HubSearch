@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HubSearch – Best Deals & Affiliate Earnings</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .platform-card { transition: all 0.3s ease; }
+    .platform-card:hover { transform: translateY(-6px); box-shadow: 0 10px 25px -5px rgba(0,0,0,.1); }
+  </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen p-4">
+
+  <div class="max-w-5xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 md:p-10">
+    <div class="text-center mb-8">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <h1 class="text-3xl md:text-4xl font-bold">HubSearch</h1>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Find the lowest prices across top stores — earn via your affiliate links!</p>
+    </div>
+
+    <!-- Search bar -->
+    <div class="flex flex-col sm:flex-row gap-3 mb-8 max-w-2xl mx-auto">
+      <input id="searchInput" type="text" placeholder="Search for products e.g. 'iPhone 15'"
+        class="flex-grow px-4 py-3 bg-gray-100 dark:bg-gray-700 border-2 border-transparent rounded-lg text-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none transition">
+      <button id="searchButton"
+        class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transform hover:scale-105 transition text-lg">
+        Search
+      </button>
+    </div>
+
+    <div id="results" class="mt-8"></div>
+
+    <footer class="text-center mt-8 text-sm text-gray-500 dark:text-gray-400">
+      © 2025 HubSearch | Built for affiliate earnings
+    </footer>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+    const resultsContainer = document.getElementById('results');
+
+    // ⚙️ Your affiliate links
+    const affiliate = {
+      amazon: "yourtag-21", // 🟢 Replace with your Amazon Associate tag
+      flipkart: "https://fkrtt.in/en/ERMzv4", // 🟢 Your Flipkart affiliate short link
+      ajio: "https://ajjio.xyz/en/FScW6k", // 🟢 Your Ajio affiliate link
+      myntra: "https://myntr.cc/en/1Aoalf", // 🟢 Your Myntra affiliate link
+      meesho: "" // Optional — can add Earnly or direct link later
+    };
+
+    // 🛒 Platforms configuration
+    const platforms = [
+      {
+        name: "Amazon",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+        url: q => `https://www.amazon.in/s?k=${encodeURIComponent(q)}&tag=${affiliate.amazon}`
+      },
+      {
+        name: "Flipkart",
+        logo: "https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/fkheaderlogo_exploreplus-44005d.svg",
+        url: q => `${affiliate.flipkart}?q=${encodeURIComponent(q)}`
+      },
+      {
+        name: "Meesho",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/8/80/Meesho_logo.svg",
+        url: q => `https://www.meesho.com/search?q=${encodeURIComponent(q)}`
+      },
+      {
+        name: "Ajio",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Ajio_Logo.svg",
+        url: q => `${affiliate.ajio}?search=${encodeURIComponent(q)}`
+      },
+      {
+        name: "Myntra",
+        logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Myntra_logo.svg",
+        url: q => `${affiliate.myntra}?q=${encodeURIComponent(q)}`
+      }
+    ];
+
+    // 🔍 Search handler
+    function performSearch() {
+      const query = searchInput.value.trim();
+      if (!query) {
+        resultsContainer.innerHTML = `<p class="text-center text-red-500 font-medium">Please enter a product name to search.</p>`;
+        return;
+      }
+
+      const cards = platforms.map(p => `
+        <a href="${p.url(query)}" target="_blank" rel="noopener noreferrer"
+           class="platform-card block bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 text-center">
+          <img src="${p.logo}" alt="${p.name} logo" class="h-10 mx-auto mb-3 object-contain">
+          <h3 class="font-semibold text-lg mb-1">${p.name}</h3>
+          <p class="text-sm text-blue-500">View ${p.name} Deals →</p>
+        </a>
+      `).join('');
+
+      resultsContainer.innerHTML = `
+        <div class="mb-4 text-center">
+          <h2 class="text-2xl font-bold">Best Offers for “${query}”</h2>
+          <p class="text-gray-500 dark:text-gray-400">Click a store below to explore the best deals with your affiliate tracking.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">${cards}</div>
+        <p class="mt-6 text-center text-sm text-gray-400">*All links include your affiliate tracking — earn on every purchase!</p>
+      `;
+    }
+
+    searchButton.addEventListener('click', performSearch);
+    searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') performSearch(); });
+  </script>
+</body>
+</html>
